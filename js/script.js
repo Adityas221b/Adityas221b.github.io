@@ -1,4 +1,3 @@
-
 // ===================================
 // ADITYA SINGH - PORTFOLIO JAVASCRIPT
 // Interactive Animations & Functionality
@@ -134,7 +133,7 @@ function initParticles() {
 }
 
 // ===================================
-// TYPING EFFECT
+// TYPING EFFECT (FASTER)
 // ===================================
 
 function initTypingEffect() {
@@ -145,14 +144,14 @@ function initTypingEffect() {
         'ML Engineer & Researcher',
         'Computer Vision Specialist',
         'AI Systems Builder',
-        'Hackathon Winner',
-        'Deep Learning Expert'
+        'Bug Bounty Researcher',
+        'Hackathon Finalist'
     ];
 
     let textIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
-    let typingSpeed = 100;
+    let typingSpeed = 50; // FASTER - was 100
 
     function type() {
         const currentText = texts[textIndex];
@@ -160,20 +159,20 @@ function initTypingEffect() {
         if (isDeleting) {
             typingElement.textContent = currentText.substring(0, charIndex - 1);
             charIndex--;
-            typingSpeed = 50;
+            typingSpeed = 25; // FASTER - was 50
         } else {
             typingElement.textContent = currentText.substring(0, charIndex + 1);
             charIndex++;
-            typingSpeed = 100;
+            typingSpeed = 50; // FASTER - was 100
         }
 
         if (!isDeleting && charIndex === currentText.length) {
             isDeleting = true;
-            typingSpeed = 2000; // Pause at end
+            typingSpeed = 1500; // SHORTER PAUSE - was 2000
         } else if (isDeleting && charIndex === 0) {
             isDeleting = false;
             textIndex = (textIndex + 1) % texts.length;
-            typingSpeed = 500;
+            typingSpeed = 300; // FASTER - was 500
         }
 
         setTimeout(type, typingSpeed);
@@ -183,7 +182,7 @@ function initTypingEffect() {
 }
 
 // ===================================
-// LIVE INDIA TIME CLOCK
+// LIVE INDIA TIME CLOCK (FIXED)
 // ===================================
 
 function initLiveClock() {
@@ -191,17 +190,23 @@ function initLiveClock() {
     if (!clockElement) return;
 
     function updateClock() {
+        // Create date object with IST timezone
         const now = new Date();
 
-        // Convert to IST (UTC + 5:30)
-        const istOffset = 5.5 * 60 * 60 * 1000;
-        const istTime = new Date(now.getTime() + istOffset - (now.getTimezoneOffset() * 60 * 1000));
+        // Format with IST timezone
+        const istTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
 
-        const hours = String(istTime.getUTCHours()).padStart(2, '0');
-        const minutes = String(istTime.getUTCMinutes()).padStart(2, '0');
-        const seconds = String(istTime.getUTCSeconds()).padStart(2, '0');
+        let hours = istTime.getHours();
+        const minutes = String(istTime.getMinutes()).padStart(2, '0');
+        const seconds = String(istTime.getSeconds()).padStart(2, '0');
 
-        clockElement.textContent = `${hours}:${minutes}:${seconds} IST`;
+        // Convert to 12-hour format
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // 0 should be 12
+        const hoursStr = String(hours).padStart(2, '0');
+
+        clockElement.textContent = `${hoursStr}:${minutes}:${seconds} ${ampm} IST`;
     }
 
     updateClock();
@@ -414,19 +419,6 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Add cursor trail effect (optional - subtle)
-let cursorTrail = [];
-const maxTrailLength = 5;
-
-document.addEventListener('mousemove', function(e) {
-    if (window.innerWidth > 768) {
-        cursorTrail.push({ x: e.clientX, y: e.clientY });
-        if (cursorTrail.length > maxTrailLength) {
-            cursorTrail.shift();
-        }
-    }
-});
-
 // Animate skill tags on hover
 const skillTags = document.querySelectorAll('.skill-tag');
 skillTags.forEach(tag => {
@@ -452,32 +444,19 @@ window.addEventListener('load', function() {
 console.log('%c👋 Hey Recruiter!', 'font-size: 24px; font-weight: bold; color: #00ffff;');
 console.log('%cThanks for checking out my portfolio!', 'font-size: 16px; color: #a855f7;');
 console.log('%cLet\'s build something amazing together 🚀', 'font-size: 14px; color: #ec4899;');
-console.log('%cEmail: aditya.singh@example.com', 'font-size: 12px; color: #666;');
+console.log('%cEmail: spirokinetics@gmail.com', 'font-size: 12px; color: #666;');
 console.log('%cGitHub: github.com/Adityas221b', 'font-size: 12px; color: #666;');
 
-// Performance monitoring (optional)
-if (window.performance) {
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            const perfData = window.performance.timing;
-            const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-            console.log(`⚡ Page loaded in ${pageLoadTime}ms`);
-        }, 0);
-    });
-}
-
-// Add copy email functionality
+// Email copy functionality
 const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
 emailLinks.forEach(link => {
     link.addEventListener('click', function(e) {
         const email = this.getAttribute('href').replace('mailto:', '');
 
-        // Try to copy to clipboard
         if (navigator.clipboard) {
             navigator.clipboard.writeText(email).then(() => {
-                // Show temporary notification
                 const notification = document.createElement('div');
-                notification.textContent = 'Email copied to clipboard!';
+                notification.textContent = 'Email copied!';
                 notification.style.cssText = `
                     position: fixed;
                     bottom: 30px;
@@ -505,27 +484,14 @@ emailLinks.forEach(link => {
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+        from { transform: translateX(400px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
-
     @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(400px); opacity: 0; }
     }
 `;
 document.head.appendChild(style);
 
-console.log('✅ Portfolio initialized successfully!');
+console.log('✅ Portfolio initialized!');
